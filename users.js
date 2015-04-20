@@ -1,5 +1,5 @@
 /**
- * Created by Александр on 19.04.2015.
+ * Created by РђР»РµРєСЃР°РЅРґСЂ on 19.04.2015.
  */
 var logger = require('./logger');
 var users = [];
