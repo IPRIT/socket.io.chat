@@ -1,0 +1,140 @@
+@import url(http://fonts.googleapis.com/css?family=RobotoDraft:400,700,900,700italic,500,400italic&subset=latin,cyrillic-ext);
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font: 13px Helvetica, Arial; }
+form { background: #6cbab6; position: fixed; bottom: 0; width: 100%; padding: 10px; }
+form input { border: 0; padding: 10px; width: 100%; margin-right: .5%; outline: none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px; }
+form button {
+    width: 100px;
+    background: rgb(255, 91, 84);
+    border: none;
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+form button:hover {
+    background: rgb(232, 87, 80);
+}
+form button:active {
+    background: rgb(210, 81, 74);
+}
+#messages {
+    list-style-type: none;
+    margin: 0 auto 53px;
+    padding: 5px 0 60px;
+    width: 600px;
+    border: 1px solid #ccc;
+    position: relative;
+}
+#messages li {
+    display: block;
+    overflow: hidden;
+}
+.message {
+    padding: 5px 10px;
+    background: #CDEBC7;
+    border: 1px solid #8FCA89;
+    border-radius: 3px;
+    margin: 4px 8px;
+    float: left;
+    min-width: 30%;
+}
+.message.own {
+    float: right;
+    background: rgba(100, 174, 255, 0.35);
+    border: 1px solid #9DBCEF;
+}
+.message-timestamp {
+    font-size: 10px;
+    color: #285526;
+    padding: 0 0 0 2px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.message-text {
+    color: #285526;
+    word-break: break-all;
+}
+.typing-message {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 0 10px;
+    color: #999;
+
+    animation:coherent 1s infinite;
+    -moz-animation:coherent 1s infinite;
+    -webkit-animation:coherent 1s infinite;
+}
+@keyframes coherent {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+@-moz-keyframes coherent {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+@-o-keyframes coherent {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+@-webkit-keyframes coherent {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+.user-name {
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    width: 200px;
+    left: 20px;
+    color: #FFF;
+    font-size: 20px;
+    padding: 7px 0;
+    cursor: pointer;
+
+}
+.input-layer {
+    margin-left: 200px;
+    text-align: right;
+}
+.message-owner {
+    display: inline-block;
+    vertical-align: middle;
+}
