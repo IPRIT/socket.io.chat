@@ -107,6 +107,9 @@ io.on('connection', function(socket) {
     });
 });
 
-http.listen(8000, function() {
-    console.log("Server listening 8000 port");
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
+var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+
+http.listen(port, ipaddress, function() {
+    console.log("Server listening " + port + " port");
 });
