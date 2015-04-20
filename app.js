@@ -49,7 +49,7 @@ io.on('connection', function(socket) {
             socket_id: socket.id,
             user: user
         });
-    });
+    }); 
 
     socket.on('chat get', function(params) {
         var msgs = messages.getMessages(params.count, params.offset, params.name, params.socket_id);
