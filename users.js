@@ -76,7 +76,7 @@ module.exports = {
             throw new Error("Name must be not empty");
         }
         for (var el = 0; el < users.length; ++el) {
-            if (users[el].userInfo.name === name) {
+            if (users[el].userInfo.name.toLowerCase() === name.toLowerCase()) {
                 return users[el];
             }
         }

@@ -3,11 +3,12 @@ var logger = require('./logger');
 var messages = [];
 
 module.exports = {
-    addMessage: function(msgObj, user, socket_id) {
-        if (!msgObj.message.length || !user.name.length || !socket_id.length) {
+    addMessage: function(type, msgObj, user, socket_id) {
+        if (!type || !msgObj.message.length || !user.name.length || !socket_id.length) {
             return false;
         }
         messages.push({
+            type: type,
             timestamp: msgObj.timestamp,
             message: msgObj.message,
             socket_id: socket_id,

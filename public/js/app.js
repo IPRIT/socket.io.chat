@@ -19,16 +19,15 @@ $(document).ready(function () {
     socket.emit('user joined', {
         name: chatConfig.name,
         timestamp: new Date().getTime()
-    });
-
-    socket.emit('chat get', {
+    }).emit('chat get', {
         count: 50,
         offset: 0
     });
 
     socket.on('chat loaded', function(messages) {
         for (var i = 0; i < messages.length; ++i) {
-            Page.insertMessage(messages[i], messages[i].user.name == chatConfig.name);
+            messages[i].isOwn = messages[i].user.name == chatConfig.name;
+            Page.insertMessage(messages[i].type, messages[i]);
         }
     });
 
@@ -39,9 +38,21 @@ $(document).ready(function () {
         });
     });
 
+    socket.on('another user joined', function(params) {
+        Page.insertMessage('USER_JOIN', params);
+    });
+
+    socket.on('user left', function(params) {
+        Page.insertMessage('USER_LEFT', params);
+    });
+
+    socket.on('user change nickname', function(params) {
+        Page.insertMessage('USER_CHANGE_NICKNAME', params);
+    });
+
     socket.on('new message', function(res) {
         console.log(res);
-        Page.insertMessage(res);
+        Page.insertMessage('CHAT_MESSAGE', res);
     });
 
     chatConfig.socket = socket;
@@ -75,33 +86,116 @@ var Page = {
         '#AF9AF1',
         '#FE5656'
     ],
-    insertMessage: function(msg, isOwn) {
-        isOwn = isOwn || false;
-        var layer = $('#messages');
-        var message = $('<li>\n    <div class="message">\n        <div class="message-owner">\n            <div class="message-owner-name"></div>\n        </div>\n        <div class="message-timestamp"></div>\n        <div class="message-text"></div>\n    </div>\n</li>');
-
-        var time = new Date(msg.timestamp);
-
-        var zeroFill = Utils.zeroFill;
-        $('.message-timestamp', message).append(
-            zeroFill(time.getHours()) + ':' + zeroFill(time.getMinutes()) + ':' + zeroFill(time.getSeconds())
-        );
-        $('.message-text', message).append(msg.message.replace('<', '&lt;').replace('>', '&gt;'));
-
-        if (isOwn) {
-            $('.message', message).addClass('own');
-            $('.message-owner-name', message).append(chatConfig.name);
-        } else {
-            $('.message-owner-name', message).append(msg.user.name);
+    insertMessage: function(type, params) {
+        if (!type) {
+            return;
+        }
+        switch (type) {
+            case 'USER_JOIN':
+                insertUserJoinMessage(params);
+                break;
+            case 'USER_LEFT':
+                insertUserLeftMessage(params);
+                break;
+            case 'USER_CHANGE_NICKNAME':
+                insertUserChangeNickMessage(params);
+                break;
+            case 'CHAT_MESSAGE':
+                insertChatMessage(params);
+                break;
+            default:
+                break;
         }
 
-        if (!isOwn) {
-            var color_index = Utils.hash(msg.socket_id ? msg.socket_id : 0) % 8;
-            $('.message', message).css({backgroundColor: this.theme_colors[color_index]});
+        function insertUserJoinMessage(params) {
+            var layer = $('#messages'),
+                message = $('<li>\n    <div class="message-notification"></div>\n</li>');
+
+            $('.message-notification', message).append(
+                'Пользователь ' + params.user.name.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;') +
+                ' присоединяется к чату.'
+            );
+
+            layer.append(message);
+            $(document.body).scrollTop(layer.innerHeight());
         }
 
-        layer.append(message);
-        $(document.body).scrollTop(layer.innerHeight());
+        function insertUserLeftMessage(params) {
+            var layer = $('#messages'),
+                message = $('<li>\n    <div class="message-notification"></div>\n</li>');
+
+            $('.message-notification', message).append(
+                'Пользователь ' + params.user.name.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;') +
+                ' вышел из чата.'
+            );
+
+            layer.append(message);
+            $(document.body).scrollTop(layer.innerHeight());
+        }
+
+        function insertUserChangeNickMessage(params) {
+            var layer = $('#messages'),
+                message = $('<li>\n    <div class="message-notification"></div>\n</li>');
+
+            $('.message-notification', message).append(
+                'Пользователь ' + params.user.old_name.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;') +
+                ' сменил имя на ' + params.user.name.replace(/[<]/g, '&lt;').replace(/[>]/g, '&gt;')
+            );
+
+            layer.append(message);
+            $(document.body).scrollTop(layer.innerHeight());
+        }
+
+        function insertChatMessage(msg) {
+            var isOwn = msg.isOwn || false,
+                layer = $('#messages'),
+                message = $('<li>\n    <div class="message">\n        <div class="message-owner">\n            <a href="#" onclick="return false;" class="message-owner-name"></a>\n        </div>\n        <div class="message-timestamp"></div>\n        <div class="message-text"></div>\n    </div>\n</li>');
+
+            var time = new Date(msg.timestamp);
+
+            var zeroFill = Utils.zeroFill;
+            $('.message-timestamp', message).append(
+                zeroFill(time.getHours()) + ':' + zeroFill(time.getMinutes()) + ':' + zeroFill(time.getSeconds())
+            );
+            msg.message = ' ' + msg.message;
+            var formattedText = msg.message.replace(
+                /[<]/g, '&lt;'
+            ).replace(
+                /[>]/g, '&gt;'
+            ).replace(
+                /^[@]([a-zA-Z0-9_]{1,64})\,/i,
+                '<b style="color: #000;">[Приватное сообщение для $1]:</b>'
+            ).replace(
+                /\[((http|https)\:\/\/(www\.)?[^\r\n\t\f \[\]\"]+)\]/gi,
+                '<img style="max-width: 90%;" src="$1" />'
+            ).replace(
+                /\s((http|https)\:\/\/(www\.)?[^\r\n\t\f }{\"]+)/gi,
+                '<a target="_blank" href="$1">$1</a>'
+            );
+            $('.message-text', message).append(formattedText);
+
+            if (isOwn) {
+                $('.message', message).addClass('own');
+                $('.message-owner-name', message).append(chatConfig.name);
+            } else {
+                $('.message-owner-name', message).append(msg.user.name)
+            }
+
+            var name = !isOwn ? msg.user.name : chatConfig.name;
+            $('.message-owner-name', message).on('click', function() {
+                var input = $('#m');
+                input.val('@' + name + ', ');
+                input.focus();
+            });
+
+            if (!isOwn) {
+                var color_index = Utils.hash(msg.socket_id ? msg.socket_id : 0) % 8;
+                $('.message', message).css({backgroundColor: Page.theme_colors[color_index]});
+            }
+
+            layer.append(message);
+            $(document.body).scrollTop(layer.innerHeight());
+        }
     },
     onSubmit: function() {
         try {
@@ -111,11 +205,12 @@ var Page = {
                 return false;
             }
 
-            this.insertMessage({
+            this.insertMessage('CHAT_MESSAGE', {
                 timestamp: new Date().getTime(),
                 message: msg,
-                socket_id: socket.id
-            }, true);
+                socket_id: socket.id,
+                isOwn: true
+            });
 
             socket.emit('chat message', {
                 timestamp: new Date().getTime(),
@@ -130,15 +225,14 @@ var Page = {
     },
     changeName: function(el) {
         var name = prompt("Введите имя");
+        if (!name) {
+            return;
+        }
         Cache.cur_user.add('user_name', name);
         chatConfig.name = name;
         el.innerHTML = name;
+
         socket.emit('user name changed', name);
-        $('#messages').empty();
-        socket.emit('chat get', {
-            count: 50,
-            offset: 0
-        });
     }
 };
 

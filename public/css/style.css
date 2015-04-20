@@ -3,10 +3,11 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font: 13px Helvetica, Arial; }
 form { background: #6cbab6; position: fixed; bottom: 0; width: 100%; padding: 10px; }
-form input { border: 0; padding: 10px; width: 100%; margin-right: .5%; outline: none;
+form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; outline: none;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    border-radius: 2px; }
+    border-radius: 2px;
+}
 form button {
     width: 100px;
     background: rgb(255, 91, 84);
@@ -45,11 +46,14 @@ form button:active {
     margin: 4px 8px;
     float: left;
     min-width: 30%;
+    margin-right: 60px;
 }
 .message.own {
     float: right;
     background: rgba(100, 174, 255, 0.35);
     border: 1px solid #9DBCEF;
+    margin-left: 60px;
+    margin-right: 10px;
 }
 .message-timestamp {
     font-size: 10px;
@@ -61,6 +65,7 @@ form button:active {
 .message-text {
     color: #285526;
     word-break: break-all;
+    margin-top: 5px;
 }
 .typing-message {
     position: absolute;
@@ -133,8 +138,18 @@ form button:active {
 .input-layer {
     margin-left: 200px;
     text-align: right;
+    white-space: nowrap;
 }
 .message-owner {
     display: inline-block;
     vertical-align: middle;
+}
+.message-owner a {
+    color: #000;
+}
+.message-notification {
+    text-align: center;
+    padding: 8px 0;
+    color: #777;
+    font-size: 13px;
 }
