@@ -46,9 +46,9 @@ io.on('connection', function(socket) {
             socket.emit('user not joined');
             return;
         }
-        var isPrivate = /^[@]([a-zA-Z0-9_]{1,64})/i.test(msg.message);
+        var isPrivate = /^[@]([a-zA-Z0-9_à-ÿÀ-ß]{1,64})/i.test(msg.message);
         if (isPrivate) {
-            var peer_name = msg.message.match(/^[@]([a-zA-Z0-9_]{1,64})/i)[1],
+            var peer_name = msg.message.match(/^[@]([a-zA-Z0-9_à-ÿÀ-ß]{1,64})/i)[1],
                 peer = users.getUserByName(peer_name),
                 peer_socket_id = peer ? peer.socket.id : '';
             logger.log('[New private message]', '[from: ' + user.name + ' ]', msg.message);

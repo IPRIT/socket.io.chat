@@ -4,7 +4,11 @@ var chatConfig = {};
 $(document).ready(function () {
     Cache.init();
     if (!Cache.cur_user.hasKey('user_name')) {
-        Cache.cur_user.add('user_name', prompt("Введите имя"));
+        var newName = prompt("Введите имя");
+        if (newName) {
+            newName = newName.replace(/\s+/gi, '_');
+        }
+        Cache.cur_user.add('user_name', newName);
     }
     chatConfig.name = Cache.cur_user.get('user_name') || false;
     $('.user-name').text(chatConfig.name);
@@ -230,15 +234,17 @@ var Page = {
         }
     },
     changeName: function(el) {
-        var name = prompt("Введите имя");
-        if (!name) {
+        var newName = prompt("Введите имя");
+        if (!newName) {
             return;
         }
-        Cache.cur_user.add('user_name', name);
-        chatConfig.name = name;
-        el.innerHTML = name;
+        newName = newName.replace(/\s+/gi, '_');
 
-        socket.emit('user name changed', name);
+        Cache.cur_user.add('user_name', newName);
+        chatConfig.name = newName;
+        el.innerHTML = newName;
+
+        socket.emit('user name changed', newName);
     }
 };
 
