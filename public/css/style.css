@@ -48,6 +48,9 @@ form button:active {
     min-width: 30%;
     margin-right: 60px;
 }
+.message a {
+    color: #4d6fff;
+}
 .message.own {
     float: right;
     background: rgba(100, 174, 255, 0.35);

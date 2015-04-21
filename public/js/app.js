@@ -166,6 +166,12 @@ var Page = {
                 /^\s[@]([a-zA-Z0-9_]{1,64})\,/i,
                 '<b style="color: #000;">[Приватное сообщение для $1]:</b>'
             ).replace(
+                /^\s(?:https?:\/\/)?(?:www\.)?youtu(?:|\.be|be\.com|\.b)(?:\/v\/|\/watch\\?v=|e\/|(?:\/\??#)?\/watch(?:.+)v=)(.{11})(?:\&[^\s]*)?/gi,
+                '<iframe src="//www.youtube.com/embed/$1" type="text/html" frameborder="0" border="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" width="500px" height="400px"></iframe>'
+            ).replace(
+                /^\s(?:https?:\/\/)?(?:www\.)?coub\.com\/view\/([a-zA-Z0-9_]+)(?:\&[^\s]*)?/gi,
+                '<iframe src="//coub.com/embed/$1?muted=false&autostart=false&originalSize=false&hideTopBar=false&startWithHD=false" allowfullscreen="true" frameborder="0" width="500px" height="300px"></iframe>'
+            ).replace(
                 /\[((http|https)\:\/\/(www\.)?[^\r\n\t\f \[\]\"]+)\]/gi,
                 '<img style="max-width: 90%;" src="$1" />'
             ).replace(
