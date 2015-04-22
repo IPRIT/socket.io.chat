@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var bl = require('bl');
 
 var http = require('http').Server(app);
 var socket_io = require('socket.io');
@@ -45,6 +46,51 @@ io.on('connection', function(socket) {
             socket.emit('user not joined');
             return;
         }
+        var cmd = msg.message.trim().toLowerCase();
+        if (cmd.match(new RegExp('^misisbooks', 'i'))) {
+            cmd = cmd.replace(new RegExp('^(misisbooks)', 'i'), '').trim();
+            if (cmd.match(new RegExp('^search', 'i'))) {
+                var q = cmd.replace(new RegExp('^(search)', 'i'), '').trim(),
+                    arr = q.split(' '),
+                    count = arr[arr.length - 1];
+                if (arr.length > 1) {
+                    q = q.replace(/(\d+)$/i, '').trim();
+                }
+
+                var result = '';
+                require('http').get('http://twosphere.ru/api/materials.search?q=' + q +
+                    '&access_token=d23a1425766546e8bb3f8c1e8dad54b8c594f1fcec898d8af1fd3712a266c85f&fields=all&count=' +
+                    count, function(res) {
+
+                    res.setEncoding('utf8');
+                    res.pipe(bl(function(err, data) {
+                        result += data.toString();
+                    }));
+
+                    res.on('error', function(e) {
+                        throw new Error('Get request failed');
+                    });
+
+                    res.on('end', function() {
+                        var items = JSON.parse(result).response.items;
+                        msg.message = '';
+                        for (var el in items) {
+                            msg.message += items[el].name + ' —  ' + items[el].download_url + ' \n\n';
+                        }
+                        messages.addMessage('CHAT_MESSAGE', msg, clone(user), socket.id);
+                        logger.log('[New message]', '[from: ' + user.name + ' ]', msg.message);
+                        socket.broadcast.emit('new message', {
+                            timestamp: msg.timestamp,
+                            message: msg.message,
+                            socket_id: socket.id,
+                            user: user
+                        });
+                    });
+                });
+                return;
+            }
+        }
+
         var isPrivate = /^[@]([a-zA-Z0-9_а-яА-Я]{1,64})/i.test(msg.message);
         if (isPrivate) {
             var peer_name = msg.message.match(/^[@]([a-zA-Z0-9_а-яА-Я]{1,64})/i)[1],

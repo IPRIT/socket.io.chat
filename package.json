@@ -1,30 +1,28 @@
 {
-    "name": "socket.io-test-chat",
-    "version": "0.0.1",
-    "private": false,
-    "scripts": {
-        "start": "node app.js"
-    },
-    "author": "Alex Belov",
-    "main": "index.html",
-    "single-instance": true,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/zhukov/webogram.git"
-    },
-    "license": "GPL",
-    "locales": [
-        "ru-ru"
-    ],
-    "homepage": "http://iprit.github.io/Socket.io-IM",
-    "dependencies": {
-        "body-parser": "~1.12.0",
-        "cookie-parser": "~1.3.4",
-        "debug": "~2.1.1",
-        "express": "^4.10.2",
-        "jade": "~1.9.2",
-        "morgan": "~1.5.1",
-        "serve-favicon": "~2.2.0",
-        "socket.io": "^1.3.5"
-    }
+  "name": "socket.io-test-chat",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Alex Belov",
+  "main": "index.html",
+  "single-instance": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhukov/webogram.git"
+  },
+  "license": "GPL",
+  "locales": [
+    "ru-ru"
+  ],
+  "homepage": "http://iprit.github.io/Socket.io-IM",
+  "dependencies": {
+    "express": "^4.10.2",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-newer": "^1.1.0",
+    "socket.io": "^1.3.5"
+  }
 }

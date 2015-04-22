@@ -69,6 +69,7 @@ form button:active {
     color: #285526;
     word-break: break-all;
     margin-top: 5px;
+    white-space: pre-line;
 }
 .typing-message {
     position: absolute;
