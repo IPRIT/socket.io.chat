@@ -67,7 +67,7 @@ form button:active {
 }
 .message-text {
     color: #285526;
-    word-break: break-all;
+    word-break: break-word;
     margin-top: 5px;
     white-space: pre-line;
 }
