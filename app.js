@@ -4,7 +4,6 @@ var app = express();
 var http = require('http').Server(app);
 var socket_io = require('socket.io');
 var io = socket_io(http);
-var util = require('util');
 
 var users = require('./users');
 var logger = require('./logger');
