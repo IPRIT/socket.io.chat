@@ -188,7 +188,7 @@ var Page = {
                 $('.message', message).addClass('own');
                 $('.message-owner-name', message).append(chatConfig.name);
             } else {
-                $('.message-owner-name', message).append(msg.user.name)
+                $('.message-owner-name', message).append(msg.user.name) 
             }
 
             var name = !isOwn ? msg.user.name : chatConfig.name;

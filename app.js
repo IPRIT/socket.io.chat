@@ -46,9 +46,9 @@ io.on('connection', function(socket) {
             socket.emit('user not joined');
             return;
         }
-        var isPrivate = /^[@]([a-zA-Z0-9_‡-ˇ¿-ﬂ]{1,64})/i.test(msg.message);
+        var isPrivate = /^[@]([a-zA-Z0-9_–∞-—è–ê-–Ø]{1,64})/i.test(msg.message);
         if (isPrivate) {
-            var peer_name = msg.message.match(/^[@]([a-zA-Z0-9_‡-ˇ¿-ﬂ]{1,64})/i)[1],
+            var peer_name = msg.message.match(/^[@]([a-zA-Z0-9_–∞-—è–ê-–Ø]{1,64})/i)[1],
                 peer = users.getUserByName(peer_name),
                 peer_socket_id = peer ? peer.socket.id : '';
             logger.log('[New private message]', '[from: ' + user.name + ' ]', msg.message);
@@ -107,8 +107,8 @@ io.on('connection', function(socket) {
     });
 });
 
-var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var ipaddress = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+var port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8080';
 
 http.listen(port, ipaddress, function() {
     console.log("Server listening " + port + " port");
